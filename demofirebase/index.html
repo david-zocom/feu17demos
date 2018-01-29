@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Firebase demo</title>
+	<style>
+		body {
+			background-color: hotpink;
+		}
+	</style>
+
+	<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
+	<script>
+	// Initialize Firebase
+	var config = {
+		apiKey: "AIzaSyCnpTG9rigIzElQt-pkOz-9Uq-WkNTh7pQ",
+		authDomain: "demofeu17.firebaseapp.com",
+		databaseURL: "https://demofeu17.firebaseio.com",
+		projectId: "demofeu17",
+		storageBucket: "",
+		messagingSenderId: "725345092006"
+	};
+	firebase.initializeApp(config);
+
+	const newRecipe = {
+		namn: 'tacos',
+		portioner: 1,
+		ingrediens1: 'salladsmix',
+		ingrediens2: {
+			mängd: '3 st',
+			ämne: 'tacoskal'
+		},
+		ingrediens3: 'köttfärs'
+	}
+	const db = firebase.database();
+	console.log('Adding to database...');
+	//db.ref('recept1/').push({ 'ämne': 'sylt', 'mängd': '1 msk' });
+	//db.ref('/recept5').set(newRecipe);
+	console.log('Finished adding to database.');
+	// push - lägga till nytt objekt
+	// set - ändra befintliga
+
+	db.ref('/').on('value', function(snapshot) {
+		console.log('On value: hämtar hela databasen.');
+		let data = snapshot.val();
+		console.log(data);
+
+		let divRecept = document.getElementById('recept');
+		for( let recipe in data ) {
+			let r = data[recipe];
+			console.log(`Receptet ${r.namn} innehåller: `, data[recipe]);
+			const newDiv = document.createElement('div');
+			let str = JSON.stringify(r);
+			newDiv.innerHTML = `<strong>${r.namn}</strong><br/>
+			${str}</br/>`;
+			divRecept.appendChild(newDiv);
+		}
+	})
+
+	</script>
+</head>
+<body>
+	<h1>Firebase genomgång 1.0 </h1>
+	<div id="recept">
+
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+<!-- Här tar det slut -->
