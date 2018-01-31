@@ -2,9 +2,10 @@
 <html lang="sv">
 <head>
 	<title>Firebase demo</title>
+	<meta charset="utf-8" />
 	<style>
 		body {
-			background-color: hotpink;
+			background-color: lime;
 		}
 	</style>
 
@@ -32,6 +33,8 @@
 		ingrediens3: 'köttfärs'
 	}
 	const db = firebase.database();
+
+	// Lägga till objekt till db, används inte för tillfället
 	if( false ) {
 		console.log('Adding to database...');
 		db.ref('recept1/').push({ 'ämne': 'sylt', 'mängd': '1 msk' });
@@ -82,11 +85,19 @@
 			});
 		});
 
-		// TODO: logout button
-		
+		document.getElementById('signoutButton').addEventListener('click', function(event) {
+			firebase.auth().signOut().then(function(result) {
+				console.log('Signed out user');
+			})
+			.catch(function(error) {
+				console.log('Signout failed');
+			})
+		})
+
 	})  // window.load
 
 
+	// Gör DOM-manipulation, måste anropas inifrån webbläsarens load-händelse
 	function fetchFromDatabase() {
 		db.ref('/').on('value', function(snapshot) {
 			console.log('On value: hämtar hela databasen.');
@@ -116,6 +127,7 @@
 	</div>
 	<button id="redirectButton">Redirect authentication</button>
 	<button id="popupButton">Popup authentication</button>
+	<button id="signoutButton">Sign out user</button>
 </body>
 </html>
 
