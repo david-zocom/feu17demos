@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="sv">
 <head>
 	<title>Firebase demo</title>
 	<style>
@@ -26,35 +26,101 @@
 		portioner: 1,
 		ingrediens1: 'salladsmix',
 		ingrediens2: {
-			mängd: '3 st',
-			ämne: 'tacoskal'
+			"mängd": '3 st',
+			"ämne": 'tacoskal'
 		},
 		ingrediens3: 'köttfärs'
 	}
 	const db = firebase.database();
-	console.log('Adding to database...');
-	//db.ref('recept1/').push({ 'ämne': 'sylt', 'mängd': '1 msk' });
-	//db.ref('/recept5').set(newRecipe);
-	console.log('Finished adding to database.');
-	// push - lägga till nytt objekt
-	// set - ändra befintliga
+	if( false ) {
+		console.log('Adding to database...');
+		db.ref('recept1/').push({ 'ämne': 'sylt', 'mängd': '1 msk' });
+		db.ref('/recept5').set(newRecipe);
+		console.log('Finished adding to database.');
+		// push - lägga till nytt objekt
+		// set - ändra befintliga
+	}
 
-	db.ref('/').on('value', function(snapshot) {
-		console.log('On value: hämtar hela databasen.');
-		let data = snapshot.val();
-		console.log(data);
+	let provider = new firebase.auth.GithubAuthProvider();
+	provider.setCustomParameters({  // optional
+	  'allow_signup': 'true'
+	});
 
-		let divRecept = document.getElementById('recept');
-		for( let recipe in data ) {
-			let r = data[recipe];
-			console.log(`Receptet ${r.namn} innehåller: `, data[recipe]);
-			const newDiv = document.createElement('div');
-			let str = JSON.stringify(r);
-			newDiv.innerHTML = `<strong>${r.namn}</strong><br/>
-			${str}</br/>`;
-			divRecept.appendChild(newDiv);
+	firebase.auth().getRedirectResult().then(function(result) {
+		// Om vi har gjort en redirect tidigare,
+		// så är result.user !== null
+		if( result.user ) {
+			console.log('Redirect result, success: we have a user.');
+			console.log('You are logged in as ' + firebase.auth().currentUser.displayName);
+			fetchFromDatabase();
+		} else {
+			console.log('Redirect result, user is null.');
 		}
 	})
+	.catch(function(error) {
+		// Inträffar om vi inte kan få information om en
+		// eventuell tidigare redirect
+		console.log('Redirect result, error: ' + error.message);
+	})
+
+
+
+	window.addEventListener('load', function() {
+		// Klicka på knappen för att logga in med redirect
+		document.getElementById('redirectButton').addEventListener('click', function(e) {
+			firebase.auth().signInWithRedirect(provider);
+		});
+
+		document.getElementById('popupButton').addEventListener('click', function(e) {
+			firebase.auth().signInWithPopup(provider).then(function(result) {
+				var user = result.user;
+				console.log('Popup result: logged in as ', user.displayName);
+				fetchFromDatabase();
+
+			}).catch(function(error) {
+				console.log('Popup result, error: ' + error.message);
+			});
+		});
+	})
+
+	//auth.signInWithRedirect (provider);  // redirect to github auth page
+	/*auth.getRedirectResult().then(function(result) {
+		// This gives you a GitHub Access Token. You can use it to access the GitHub API.
+		var token = result.credential.accessToken;
+		// The signed-in user info.
+		var user = result.user;
+		console.log('GitHub user:', user);
+		fetchFromDatabase();
+	}).catch(function(error) {
+		// Handle Errors here.
+		var errorCode = error.code;
+		var errorMessage = error.message;
+		// The email of the user's account used.
+		var email = error.email;
+		// The firebase.auth.AuthCredential type that was used.
+		var credential = error.credential;
+		console.log('GitHub error: ' + error.message);
+	});*/
+
+	function fetchFromDatabase() {
+		db.ref('/').on('value', function(snapshot) {
+			console.log('On value: hämtar hela databasen.');
+			let data = snapshot.val();
+			console.log(data);
+
+			let divRecept = document.getElementById('recept');
+			for( let recipe in data ) {
+				let r = data[recipe];
+				console.log(`Receptet ${r.namn} innehåller: `, data[recipe]);
+				const newDiv = document.createElement('div');
+				let str = JSON.stringify(r);
+				newDiv.innerHTML = `<strong>${r.namn}</strong><br/>
+				${str}</br/>`;
+				divRecept.appendChild(newDiv);
+			}
+		})
+	}
+
 
 	</script>
 </head>
@@ -63,6 +129,8 @@
 	<div id="recept">
 
 	</div>
+	<button id="redirectButton">Redirect authentication</button>
+	<button id="popupButton">Popup authentication</button>
 </body>
 </html>
 
