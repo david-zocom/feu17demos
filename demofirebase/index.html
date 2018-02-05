@@ -5,7 +5,7 @@
 	<meta charset="utf-8" />
 	<style>
 		body {
-			background-color: lime;
+			background-color: hotpink;
 		}
 	</style>
 
@@ -37,7 +37,7 @@
 	// Lägga till objekt till db, används inte för tillfället
 	if( false ) {
 		console.log('Adding to database...');
-		db.ref('recept1/').push({ 'ämne': 'sylt', 'mängd': '1 msk' });
+		db.ref('recept1/').push({ 'ämne': 'sylt', 'mängd': '3 msk' });
 		db.ref('/recept5').set(newRecipe);
 		console.log('Finished adding to database.');
 		// push - lägga till nytt objekt
@@ -49,6 +49,25 @@
 	  'allow_signup': 'true'
 	});
 
+	// Talar om ifall vi är inloggade eller inte
+	firebase.auth().onAuthStateChanged(function(user) {
+	  if (user) {
+	    // User is signed in.
+	    var displayName = user.displayName;
+	    var email = user.email;
+	    var emailVerified = user.emailVerified;
+	    var photoURL = user.photoURL;
+	    var isAnonymous = user.isAnonymous;
+	    var uid = user.uid;
+	    var providerData = user.providerData;
+		console.log('onAuthStateChanged: user is signed in', user);
+	    // ...
+	  } else {
+	    // User is signed out.
+	    // ...
+		console.log('onAuthStateChanged: user is signed out');
+	  }
+	});
 	firebase.auth().getRedirectResult().then(function(result) {
 		// Om vi har gjort en redirect tidigare,
 		// så är result.user !== null
