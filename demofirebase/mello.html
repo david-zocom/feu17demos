@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+	<title>Firebase demo</title>
+	<meta charset="utf-8" />
+	<style>
+		#melloImg{
+			width: 180px;
+		}
+	</style>
+
+	<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+	    apiKey: "AIzaSyCnpTG9rigIzElQt-pkOz-9Uq-WkNTh7pQ",
+	    authDomain: "demofeu17.firebaseapp.com",
+	    databaseURL: "https://demofeu17.firebaseio.com",
+	    projectId: "demofeu17",
+	    storageBucket: "demofeu17.appspot.com",
+	    messagingSenderId: "725345092006"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+	<script>
+		window.addEventListener('load', function(event) {
+			let compList = document.getElementsByClassName('competitionList')[0];
+			/*let temp = document.createElement('li');
+			temp.innerText = 'demo';
+			compList.appendChild(temp);*/
+			firebase.database().ref('mello/').once('value', function(snapshot) {
+				let data = snapshot.val();
+				console.log(data);
+
+				for( let key in data ) {
+					let li = document.createElement('li');
+					let output = '';
+					let competition = data[key];
+					let allaBidrag = competition.bidrag;
+					let plats = competition.plats;
+					let datum = competition.datum;
+					let tavlNamn = competition.tävlingsnamn;
+					output += `${tavlNamn} i ${plats}, ${datum}`;
+
+					li.innerText = output;
+					compList.appendChild(li);
+				}
+
+			}) // once/value
+
+			firebase.database().ref('mello/').on('child_added', function(snapshot) {
+				let obj = snapshot.val();
+				console.log('child_added', obj);
+			})
+			firebase.database().ref('mello/').on('child_changed', function(snapshot) {
+				let obj = snapshot.val();
+				console.log('child_changed', obj);
+			})
+			firebase.database().ref('mello/').on('child_removed', function(snapshot) {
+				let obj = snapshot.val();
+				console.log('child_removed', obj);
+			})
+
+		});//window load
+
+
+	</script>
+</head>
+<body>
+	<img id="melloImg" src="https://www.eurovisionary.com/wp-content/uploads/2018/01/Melodifestivalen-2018.jpg">
+
+	<p>
+		Information om Melodifestivalen - deltävlingar
+	</p>
+	<ul class="competitionList">
+		<!-- Här ska vi lägga in deltävlingar från Firebase -->
+	</ul>
+
+</body>
+</html>
+
+
+
+
+
+
+
+.

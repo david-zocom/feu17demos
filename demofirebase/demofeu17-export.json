@@ -1,0 +1,53 @@
+{
+	"mello": {
+		"tävling 1": {
+			"tävlingsnamn": "Deltävling 1",
+			"plats": "Karlstad",
+			"datum": "2018-02-03",
+			"bidrag": {
+				"bidrag 1": {
+					"nr": 1,
+					"artist": "Sigrid Bernson",
+					"låttitel": "Patrick Swayze",
+					"placering": 3.5
+				}
+			}
+		}
+	},
+
+	"recept": {
+	  "-L407alIOir2BiBbcnmE" : {
+	    "ingrediens1" : "salladsmix",
+	    "ingrediens2" : {
+	      "mängd" : "3 st",
+	      "ämne" : "tacoskal"
+	    },
+	    "ingrediens3" : "köttfärs",
+	    "namn" : "tacos",
+	    "portioner" : 1
+	  },
+	  "recept1" : {
+	    "-L407al9jxph_lXX-YAJ" : {
+	      "mängd" : "1 msk",
+	      "ämne" : "sylt"
+	    },
+	    "ingrediens1" : {
+	      "mängd" : "1 tsk",
+	      "ämne" : "salt"
+	    },
+	    "ingrediens2" : "vatten",
+	    "ingrediens3" : "salt",
+	    "namn" : "gröt"
+	  },
+	  "recept5" : {
+	    "ingrediens1" : "salladsmix",
+	    "ingrediens2" : {
+	      "mängd" : "3 st",
+	      "ämne" : "tacoskal"
+	    },
+	    "ingrediens3" : "köttfärs",
+	    "namn" : "tacos",
+	    "portioner" : 1
+	  }
+	}
+}
