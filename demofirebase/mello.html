@@ -7,6 +7,9 @@
 		#melloImg{
 			width: 180px;
 		}
+		body {
+			background-color: hotpink;
+		}
 	</style>
 
 	<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
@@ -28,14 +31,16 @@
 			/*let temp = document.createElement('li');
 			temp.innerText = 'demo';
 			compList.appendChild(temp);*/
-			firebase.database().ref('mello/').once('value', function(snapshot) {
-				let data = snapshot.val();
-				console.log(data);
-
-				for( let key in data ) {
+			firebase.database().ref('mello/')
+			.orderByChild('datumFallande')
+			.once('value', function(snapshot) {
+				snapshot.forEach( child => {
+					//let data = snapshot.val();
+					//console.log(data);
+					let competition = child.val();
 					let li = document.createElement('li');
 					let output = '';
-					let competition = data[key];
+
 					let allaBidrag = competition.bidrag;
 					let plats = competition.plats;
 					let datum = competition.datum;
@@ -44,7 +49,8 @@
 
 					li.innerText = output;
 					compList.appendChild(li);
-				}
+
+				})
 
 			}) // once/value
 
