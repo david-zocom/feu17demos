@@ -26,6 +26,7 @@
 	  firebase.initializeApp(config);
 	</script>
 	<script>
+		const objectsPerPage = 2;
 		window.addEventListener('load', function(event) {
 			let compList = document.getElementsByClassName('competitionList')[0];
 			/*let temp = document.createElement('li');
@@ -33,6 +34,7 @@
 			compList.appendChild(temp);*/
 			firebase.database().ref('mello/')
 			.orderByChild('datumFallande')
+			.limitToFirst(objectsPerPage)
 			.once('value', function(snapshot) {
 				snapshot.forEach( child => {
 					//let data = snapshot.val();
@@ -67,6 +69,10 @@
 				console.log('child_removed', obj);
 			})
 
+			/*Sida 18?
+			Sida 1-17 visar 17*10 sökträffar = 170
+			Sida 18 visar 171-180
+			.limitToFirst(180).limitToLast(10) */
 		});//window load
 
 
@@ -77,6 +83,11 @@
 
 	<p>
 		Information om Melodifestivalen - deltävlingar
+	</p>
+	<p>
+		Välj intervall för sökträffar: <br />
+		<input type="text" placeholder="Från" /> <br />
+		<input type="text" placeholder="Till" /> <br />
 	</p>
 	<ul class="competitionList">
 		<!-- Här ska vi lägga in deltävlingar från Firebase -->
